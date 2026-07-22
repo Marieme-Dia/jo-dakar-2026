@@ -1,0 +1,72 @@
+{
+  "info": {
+    "_postman_id": "c0f079b8-dc75-417b-878b-f42d4d1b3289",
+    "name": "JO-Dakar-2026",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "53827191",
+    "_collection_link": "https://go.postman.co/collection/53827191-c0f079b8-dc75-417b-878b-f42d4d1b3289?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Get Athletes",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/api/athletes",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "athletes"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get Dashboard Stats",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/api/dashboard/stats",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "dashboard",
+            "stats"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get Disciplines",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/api/disciplines",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "disciplines"
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}

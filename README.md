@@ -1,4 +1,4 @@
-Markdown
+
 # 🏅 JO Dakar 2026 - Plateforme Officielle de Gestion
 
 Bienvenue sur le dépôt du projet de gestion et de suivi des **Jeux Olympiques de la Jeunesse (JOJ) Dakar 2026**. Cette application web full-stack permet d'administrer les athlètes, les disciplines, les épreuves, de saisir les résultats et de visualiser en temps réel le tableau des médailles ainsi que le classement général par points.

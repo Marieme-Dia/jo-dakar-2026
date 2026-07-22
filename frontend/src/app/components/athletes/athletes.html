@@ -1,0 +1,124 @@
+<div class="row mb-4 align-items-center">
+  <div class="col-md-6">
+    <h2 class="fw-bold text-dark d-flex align-items-center gap-2">
+      <i class="bi bi-people-fill text-primary fs-3"></i>
+      Gestion des Athlètes
+    </h2>
+    <p class="text-muted mb-0">Inscrivez et gérez les participants aux épreuves</p>
+  </div>
+  <div class="col-md-6 text-end">
+    <!-- Bouton "Ajouter un Athlète" corrigé avec btn-primary -->
+    <button class="btn btn-primary fw-bold text-white px-3 py-2 shadow-sm" data-bs-toggle="modal" data-bs-target="#athleteModal" (click)="resetForm()">
+      <i class="bi bi-person-plus-fill me-2"></i> Ajouter un Athlète
+    </button>
+  </div>
+</div>
+
+<!-- Carte Liste Athlètes -->
+<div class="card card-custom p-4 shadow-sm border-0">
+  <div *ngIf="loading" class="text-center py-4">
+    <div class="spinner-border text-primary" role="status"></div>
+  </div>
+
+  <div *ngIf="!loading && athletes.length === 0" class="text-center py-5">
+    <i class="bi bi-person-x text-muted fs-1 mb-2 d-block"></i>
+    <h5 class="fw-bold">Aucun athlète enregistré</h5>
+    <p class="text-muted">Cliquez sur le bouton ci-dessus pour ajouter votre premier athlète.</p>
+  </div>
+
+  <div *ngIf="!loading && athletes.length > 0" class="table-responsive">
+    <table class="table table-hover align-middle">
+      <thead class="table-light">
+        <tr>
+          <th>ID</th>
+          <th>Prénom & Nom</th>
+          <th>Pays / Nation</th>
+          <th>Discipline</th>
+          <th class="text-end">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let a of athletes">
+          <td class="fw-bold text-muted">#{{ a.id }}</td>
+          <td class="fw-semibold">{{ a.prenom }} {{ a.nom }}</td>
+
+          <td>
+            <ng-container *ngIf="a.pays || a.nationalite || a.country; else noCountry">
+              <span class="badge bg-secondary px-3 py-2 fs-6">
+                {{ a.pays || a.nationalite || a.country }}
+              </span>
+            </ng-container>
+            <ng-template #noCountry>
+              <span class="text-muted fst-italic">Non renseigné</span>
+            </ng-template>
+          </td>
+
+          <td>
+            <span [ngClass]="(a.discipline?.nom || a.disciplineNom) ? 'badge bg-primary px-3 py-2 fs-6' : 'badge bg-light text-muted border px-3 py-2 fs-6'">
+              {{ a.discipline?.nom || a.disciplineNom || 'N/A' }}
+            </span>
+          </td>
+
+          <td class="text-end">
+            <button class="btn btn-sm btn-outline-primary me-2" data-bs-toggle="modal" data-bs-target="#athleteModal" (click)="editAthlete(a)">
+              <i class="bi bi-pencil-fill"></i>
+            </button>
+            <button class="btn btn-sm btn-outline-danger" (click)="deleteAthlete(a.id)">
+              <i class="bi bi-trash-fill"></i>
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Modal Formulaire Athlète -->
+<div class="modal fade" id="athleteModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content border-0 shadow">
+
+      <!-- En-tête bleu restauré -->
+      <div class="modal-header text-white bg-primary">
+        <h5 class="modal-title fw-bold">
+          <i class="bi me-2" [ngClass]="isEditing ? 'bi-pencil-square' : 'bi-person-plus-fill'"></i>
+          {{ isEditing ? 'Modifier Athlète' : 'Nouvel Athlète' }}
+        </h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+
+      <div class="modal-body p-4">
+        <form (ngSubmit)="saveAthlete()">
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Prénom</label>
+            <input type="text" class="form-control" [(ngModel)]="newAthlete.prenom" name="prenom" required placeholder="Ex: Sadio">
+          </div>
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Nom</label>
+            <input type="text" class="form-control" [(ngModel)]="newAthlete.nom" name="nom" required placeholder="Ex: Mané">
+          </div>
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Pays / Nation</label>
+            <input type="text" class="form-control" [(ngModel)]="newAthlete.pays" name="pays" required placeholder="Ex: Sénégal">
+          </div>
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Discipline</label>
+            <select class="form-select" [(ngModel)]="newAthlete.disciplineId" name="disciplineId">
+              <option value="">Sélectionner une discipline</option>
+              <option *ngFor="let d of disciplines" [value]="d.id">{{ d.nom }}</option>
+            </select>
+          </div>
+
+          <!-- Boutons du modal restaurés -->
+          <div class="text-end mt-4">
+            <button type="button" class="btn btn-light me-2" data-bs-dismiss="modal">Annuler</button>
+            <button type="submit" class="btn btn-primary text-white fw-bold px-4" data-bs-dismiss="modal">
+              {{ isEditing ? 'Enregistrer' : 'Ajouter' }}
+            </button>
+          </div>
+        </form>
+      </div>
+
+    </div>
+  </div>
+</div>

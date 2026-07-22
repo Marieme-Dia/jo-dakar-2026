@@ -1,0 +1,49 @@
+<div class="row mb-4 align-items-center">
+  <div class="col-md-8">
+    <h2 class="fw-bold text-dark d-flex align-items-center gap-2">
+      <i class="bi bi-trophy-fill text-warning fs-3"></i>
+      Tableau Officiel des Médailles
+    </h2>
+    <p class="text-muted mb-0">Classement en temps réel des nations aux Jeux Olympiques de Dakar 2026</p>
+  </div>
+</div>
+
+<div class="card card-custom p-4">
+  <div *ngIf="loading" class="text-center py-5">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Chargement...</span>
+    </div>
+    <p class="mt-3 text-muted">Récupération du classement des pays...</p>
+  </div>
+
+  <div *ngIf="!loading && tableau.length === 0" class="text-center py-5">
+    <i class="bi bi-award text-muted fs-1 mb-3 d-block"></i>
+    <h5 class="fw-bold">Aucune médaille attribuée pour le moment</h5>
+    <p class="text-muted">Les résultats enregistrés apparaîtront automatiquement ici.</p>
+  </div>
+
+  <div *ngIf="!loading && tableau.length > 0" class="table-responsive">
+    <table class="table table-hover align-middle">
+      <thead class="table-light">
+        <tr>
+          <th scope="col" class="text-center">Rang</th>
+          <th scope="col">Pays / Nation</th>
+          <th scope="col" class="text-center" style="color: #FCB131;"><i class="bi bi-circle-fill me-1"></i> Or</th>
+          <th scope="col" class="text-center" style="color: #A8A8A8;"><i class="bi bi-circle-fill me-1"></i> Argent</th>
+          <th scope="col" class="text-center" style="color: #CD7F32;"><i class="bi bi-circle-fill me-1"></i> Bronze</th>
+          <th scope="col" class="text-center fw-bold">Total</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let row of tableau; let i = index">
+          <td class="text-center fw-bold fs-5" [ngClass]="{'text-warning': i === 0}">#{{ i + 1 }}</td>
+          <td class="fw-bold">{{ row.pays }}</td>
+          <td class="text-center fw-bold">{{ row.or }}</td>
+          <td class="text-center fw-bold">{{ row.argent }}</td>
+          <td class="text-center fw-bold">{{ row.bronze }}</td>
+          <td class="text-center fw-bold fs-5 text-primary">{{ row.total }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

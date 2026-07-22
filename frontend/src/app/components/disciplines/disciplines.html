@@ -1,0 +1,59 @@
+<div class="row mb-4 align-items-center">
+  <div class="col-md-6">
+    <h2 class="fw-bold text-dark d-flex align-items-center gap-2">
+      <i class="bi bi-award-fill text-success fs-3"></i>
+      Disciplines Olympiques
+    </h2>
+    <p class="text-muted mb-0">Sports et épreuves officielles de Dakar 2026</p>
+  </div>
+  <div class="col-md-6 text-end">
+    <button class="btn btn-success text-white fw-bold" data-bs-toggle="modal" data-bs-target="#disciplineModal">
+      <i class="bi bi-plus-circle-fill me-2"></i> Nouvelle Discipline
+    </button>
+  </div>
+</div>
+
+<div class="row">
+  <div *ngFor="let d of disciplines" class="col-md-4 mb-4">
+    <div class="card card-custom p-4 h-100 position-relative">
+      <div class="d-flex justify-content-between align-items-start">
+        <h5 class="fw-bold text-dark mb-2">{{ d.nom }}</h5>
+        <button class="btn btn-sm btn-link text-danger p-0" (click)="deleteDiscipline(d.id)">
+          <i class="bi bi-trash"></i>
+        </button>
+      </div>
+      <p class="text-muted small flex-grow-1">{{ d.description || 'Aucune description fournie.' }}</p>
+      <div class="mt-3 pt-3 border-top d-flex align-items-center gap-2 text-success fw-semibold">
+        <i class="bi bi-check-circle-fill"></i> Discipline Officielle
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Ajout Discipline -->
+<div class="modal fade" id="disciplineModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content border-0 shadow">
+      <div class="modal-header text-white bg-success">
+        <h5 class="modal-title fw-bold"><i class="bi bi-award-fill me-2"></i> Ajouter une Discipline</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body p-4">
+        <form (ngSubmit)="saveDiscipline()">
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Nom de la discipline</label>
+            <input type="text" class="form-control" [(ngModel)]="newDiscipline.nom" name="nom" required placeholder="Ex: Athlétisme, Natation...">
+          </div>
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Description</label>
+            <textarea class="form-control" [(ngModel)]="newDiscipline.description" name="description" rows="3" placeholder="Description courte..."></textarea>
+          </div>
+          <div class="text-end mt-4">
+            <button type="button" class="btn btn-light me-2" data-bs-dismiss="modal">Annuler</button>
+            <button type="submit" class="btn btn-success text-white" data-bs-dismiss="modal">Ajouter</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

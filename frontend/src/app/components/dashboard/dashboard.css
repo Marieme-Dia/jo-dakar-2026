@@ -1,0 +1,123 @@
+/* Arrière-plan global */
+.dashboard-wrapper {
+  background-color: #f8fafc;
+  min-height: 100vh;
+}
+
+/* --- BANNIÈRE D'ACCUEIL AVEC ATHLÈTE --- */
+.welcome-banner {
+  background-color: #0b132b;
+  min-height: 200px;
+  position: relative;
+}
+
+/* Image de l'athlète à droite */
+.athlete-bg {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 55%;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.athlete-bg img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top center;
+  filter: contrast(110%) brightness(90%);
+}
+
+/* Masque dégradé bleu pour fondre l'image et protéger la lisibilité */
+.banner-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(90deg, #0b132b 35%, rgba(11, 19, 43, 0.85) 60%, rgba(11, 19, 43, 0.2) 100%);
+  z-index: 1;
+}
+
+/* Animation d'apparition globale */
+.animate-fade-in {
+  animation: fadeIn 0.4s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* --- CARTES KPI --- */
+.kpi-card {
+  transition: all 0.3s ease;
+  background: #ffffff;
+}
+
+.kpi-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 20px -5px rgba(0, 0, 0, 0.08) !important;
+}
+
+.kpi-icon-wrapper {
+  width: 56px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Tailles de typographie secondaires */
+.fs-7 { font-size: 0.825rem; }
+.fs-8 { font-size: 0.75rem; }
+
+/* --- TABLEAU DU CLASSEMENT --- */
+.custom-table thead th {
+  background-color: #f1f5f9;
+  color: #475569;
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  letter-spacing: 0.5px;
+  padding: 1rem;
+  border: none;
+}
+
+.custom-table tbody td {
+  padding: 1rem;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+/* Badges de classement des rangs */
+.rank-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+
+.rank-1 { background-color: #fef3c7; color: #d97706; }
+.rank-2 { background-color: #f1f5f9; color: #64748b; }
+.rank-3 { background-color: #ffedd5; color: #c2410c; }
+.rank-default { background-color: #f8fafc; color: #94a3b8; }
+
+/* Pastilles de médailles */
+.medal-pill {
+  width: 36px;
+  padding: 6px 0;
+  font-size: 0.875rem;
+  font-weight: 600;
+  border-radius: 8px;
+}
+
+.bg-gold-subtle { background-color: #fffbeb; color: #b45309; }
+.bg-silver-subtle { background-color: #f8fafc; color: #475569; }
+.bg-bronze-subtle { background-color: #fff7ed; color: #c2410c; }

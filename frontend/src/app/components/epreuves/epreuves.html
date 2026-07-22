@@ -1,0 +1,182 @@
+<div class="row mb-4 align-items-center">
+  <div class="col-md-6">
+    <h2 class="fw-bold text-dark d-flex align-items-center gap-2">
+      <i class="bi bi-calendar-event-fill text-danger fs-3"></i>
+      Épreuves & Saisie des Podiums
+    </h2>
+    <p class="text-muted mb-0">Programmation des compétitions et attribution des médailles</p>
+  </div>
+  <div class="col-md-6 text-end">
+    <button class="btn btn-danger text-white fw-bold" data-bs-toggle="modal" data-bs-target="#epreuveModal">
+      <i class="bi bi-plus-circle-fill me-2"></i> Créer une Épreuve
+    </button>
+  </div>
+</div>
+
+<!-- Liste des Épreuves -->
+<div class="card card-custom p-4">
+  <div *ngIf="loading" class="text-center py-4">
+    <div class="spinner-border text-danger" role="status"></div>
+  </div>
+
+  <div *ngIf="!loading && epreuves.length === 0" class="text-center py-5">
+    <i class="bi bi-calendar-x text-muted fs-1 mb-2 d-block"></i>
+    <h5 class="fw-bold">Aucune épreuve programmée</h5>
+    <p class="text-muted">Ajoutez une première épreuve pour commencer la compétition.</p>
+  </div>
+
+  <div *ngIf="!loading && epreuves.length > 0" class="table-responsive">
+    <table class="table table-hover align-middle">
+      <thead class="table-light">
+        <tr>
+          <th>ID</th>
+          <th>Nom de l'épreuve</th>
+          <th>Discipline</th>
+          <th>Date & Heure</th>
+          <th class="text-end">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let ep of epreuves">
+          <td class="fw-bold text-muted">#{{ ep.id }}</td>
+          <td class="fw-bold">{{ ep.nom }}</td>
+          <td>
+            <span class="badge bg-outline-dark border text-dark">
+              {{ ep.discipline?.nom || 'N/A' }}
+            </span>
+          </td>
+
+          <!-- Affichage Date + Heure ex: 21/07/2026 à 15:30 -->
+          <td>
+            <ng-container *ngIf="ep.dateEpreuve as eventDate; else noDate">
+              <span
+                [ngClass]="isPastDate(eventDate) ? 'badge bg-danger-subtle text-danger border border-danger' : 'badge bg-success-subtle text-success border border-success'"
+                class="px-3 py-2 fw-semibold">
+                <i class="bi me-1" [ngClass]="isPastDate(eventDate) ? 'bi-clock-history' : 'bi-calendar-check'"></i>
+                {{ eventDate | date:'dd/MM/yyyy' }} à {{ eventDate | date:'HH:mm' }}
+                <small *ngIf="isPastDate(eventDate)"> (Terminée)</small>
+              </span>
+            </ng-container>
+            <ng-template #noDate>
+              <span class="text-muted fst-italic">Non renseignée</span>
+            </ng-template>
+          </td>
+
+          <!-- Colonne d'Actions (Podium + Suppression) -->
+          <td class="text-end">
+            <div class="d-flex justify-content-end gap-2">
+              <button class="btn btn-sm btn-warning fw-semibold shadow-sm" data-bs-toggle="modal" data-bs-target="#podiumModal" (click)="openPodiumModal(ep)">
+                <i class="bi bi-trophy-fill me-1"></i> Saisir le Podium
+              </button>
+
+              <button class="btn btn-sm btn-outline-danger shadow-sm" (click)="supprimerEpreuve(ep.id)" title="Supprimer l'épreuve">
+                <i class="bi bi-trash-fill"></i>
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Modal Création Épreuve -->
+<div class="modal fade" id="epreuveModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content border-0 shadow">
+      <div class="modal-header text-white bg-danger">
+        <h5 class="modal-title fw-bold"><i class="bi bi-calendar-plus me-2"></i> Nouvelle Épreuve</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body p-4">
+        <form (ngSubmit)="saveEpreuve()">
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Nom de l'épreuve</label>
+            <input type="text" class="form-control" [(ngModel)]="newEpreuve.nom" name="nom" required placeholder="Ex: 100m Masculin, Marathon...">
+          </div>
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Discipline associée</label>
+            <select class="form-select" [(ngModel)]="newEpreuve.disciplineId" name="disciplineId" required>
+              <option value="">Sélectionner la discipline</option>
+              <option *ngFor="let d of disciplines" [value]="d.id">{{ d.nom }}</option>
+            </select>
+          </div>
+
+          <!-- Sélection Date et Heure sur la même ligne -->
+          <div class="row mb-3">
+            <div class="col-6">
+              <label class="form-label fw-semibold">Date</label>
+              <input type="date" class="form-control" [(ngModel)]="newEpreuve.dateEpreuve" name="dateEpreuve">
+            </div>
+            <div class="col-6">
+              <label class="form-label fw-semibold">Heure</label>
+              <input type="time" class="form-control" [(ngModel)]="newEpreuve.heureEpreuve" name="heureEpreuve">
+            </div>
+          </div>
+
+          <div class="text-end mt-4">
+            <button type="button" class="btn btn-light me-2" data-bs-dismiss="modal">Annuler</button>
+            <button type="submit" class="btn btn-danger text-white" data-bs-dismiss="modal">Créer</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Saisie du Podium -->
+<div class="modal fade" id="podiumModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content border-0 shadow">
+      <div class="modal-header text-dark bg-warning">
+        <h5 class="modal-title fw-bold"><i class="bi bi-trophy-fill me-2"></i> Attribuer les Médailles</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body p-4">
+        <p class="fw-bold mb-3 text-secondary">Épreuve : <span class="text-dark">{{ selectedEpreuve?.nom }}</span></p>
+        <form (ngSubmit)="enregistrerPodium()">
+          <div class="mb-3 p-3 border rounded" style="background-color: #FFF9E6;">
+            <label class="form-label fw-bold text-warning d-flex align-items-center gap-2">
+              <i class="bi bi-circle-fill"></i> Médaille d'Or (1ère place)
+            </label>
+            <select class="form-select" [(ngModel)]="podiumForm.athleteOrId" name="athleteOr">
+              <option value="">Sélectionner le vainqueur</option>
+              <option *ngFor="let a of athletes" [value]="a.id">
+                {{ a.prenom }} {{ a.nom }} <ng-container *ngIf="a.pays || a.nationalite">({{ a.pays || a.nationalite }})</ng-container>
+              </option>
+            </select>
+          </div>
+
+          <div class="mb-3 p-3 border rounded" style="background-color: #F8F9FA;">
+            <label class="form-label fw-bold text-secondary d-flex align-items-center gap-2">
+              <i class="bi bi-circle-fill"></i> Médaille d'Argent (2ème place)
+            </label>
+            <select class="form-select" [(ngModel)]="podiumForm.athleteArgentId" name="athleteArgent">
+              <option value="">Sélectionner le deuxième</option>
+              <option *ngFor="let a of athletes" [value]="a.id">
+                {{ a.prenom }} {{ a.nom }} <ng-container *ngIf="a.pays || a.nationalite">({{ a.pays || a.nationalite }})</ng-container>
+              </option>
+            </select>
+          </div>
+
+          <div class="mb-3 p-3 border rounded" style="background-color: #FAF0E6;">
+            <label class="form-label fw-bold d-flex align-items-center gap-2" style="color: #CD7F32;">
+              <i class="bi bi-circle-fill"></i> Médaille de Bronze (3ème place)
+            </label>
+            <select class="form-select" [(ngModel)]="podiumForm.athleteBronzeId" name="athleteBronze">
+              <option value="">Sélectionner le troisième</option>
+              <option *ngFor="let a of athletes" [value]="a.id">
+                {{ a.prenom }} {{ a.nom }} <ng-container *ngIf="a.pays || a.nationalite">({{ a.pays || a.nationalite }})</ng-container>
+              </option>
+            </select>
+          </div>
+
+          <div class="text-end mt-4">
+            <button type="button" class="btn btn-light me-2" data-bs-dismiss="modal">Annuler</button>
+            <button type="submit" class="btn btn-warning fw-bold" data-bs-dismiss="modal">Enregistrer le Podium</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

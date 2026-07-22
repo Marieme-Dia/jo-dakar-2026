@@ -1,0 +1,180 @@
+<div class="dashboard-wrapper container-fluid px-4 py-4">
+
+  <!-- BANNIÈRE D'ACCUEIL AVEC ATHLÈTE EN ARRIÈRE-PLAN -->
+  <div class="welcome-banner p-4 p-md-5 mb-4 rounded-4 shadow-sm text-white position-relative overflow-hidden">
+
+    <!-- Image de l'athlète positionnée à droite -->
+    <div class="athlete-bg">
+      <img src="https://images.unsplash.com/photo-1517838277536-f5f99be501cd?q=80&w=1000&auto=format&fit=crop" alt="Athlète JO Dakar 2026">
+    </div>
+
+    <!-- Fond bleu dégradé (Overlay) pour garantir la lisibilité du texte -->
+    <div class="banner-overlay"></div>
+
+    <!-- Contenu texte au-dessus de l'image -->
+    <div class="position-relative z-2 col-lg-7">
+      <span class="badge bg-white text-primary rounded-pill px-3 py-2 fw-semibold mb-3 shadow-sm">
+        <i class="bi bi-clock-history me-1"></i> Mises à jour en temps réel
+      </span>
+      <h1 class="fw-bold display-6 mb-2">Tableau de Bord — JO Dakar 2026</h1>
+      <p class="lead mb-0 text-white-50 fs-6">
+        Suivez en direct les performances des athlètes, le détail des médailles et le classement officiel des nations.
+      </p>
+    </div>
+
+  </div>
+
+  <!-- LOADER (Pendant le chargement) -->
+  <div *ngIf="loading" class="text-center py-5">
+    <div class="spinner-grow text-primary" role="status" style="width: 3rem; height: 3rem;"></div>
+    <p class="mt-3 text-muted fw-medium">Chargement des données statistiques...</p>
+  </div>
+
+  <!-- CONTENU PRINCIPAL DU DASHBOARD -->
+  <div *ngIf="!loading && stats" class="animate-fade-in">
+
+    <!-- GRILLE DES 4 CARTES KPI -->
+    <div class="row g-4 mb-4">
+
+      <!-- KPI 1 : Athlètes -->
+      <div class="col-12 col-sm-6 col-xl-3">
+        <div class="kpi-card card border-0 shadow-sm rounded-4 p-3 h-100">
+          <div class="d-flex align-items-center justify-content-between">
+            <div>
+              <span class="text-muted fw-semibold text-uppercase fs-7">Athlètes Engagés</span>
+              <h2 class="fw-bold fs-1 my-1 text-dark">{{ stats.totalAthletes }}</h2>
+              <span class="badge bg-primary-subtle text-primary rounded-pill fs-8">
+                <i class="bi bi-person-check-fill me-1"></i>Inscrits
+              </span>
+            </div>
+            <div class="kpi-icon-wrapper bg-primary text-white rounded-4 p-3">
+              <i class="bi bi-people-fill fs-2"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- KPI 2 : Nations -->
+      <div class="col-12 col-sm-6 col-xl-3">
+        <div class="kpi-card card border-0 shadow-sm rounded-4 p-3 h-100">
+          <div class="d-flex align-items-center justify-content-between">
+            <div>
+              <span class="text-muted fw-semibold text-uppercase fs-7">Nations Participantes</span>
+              <h2 class="fw-bold fs-1 my-1 text-dark">{{ stats.totalPaysParticipants }}</h2>
+              <span class="badge bg-success-subtle text-success rounded-pill fs-8">
+                <i class="bi bi-globe-americas me-1"></i>Pays représentés
+              </span>
+            </div>
+            <div class="kpi-icon-wrapper bg-success text-white rounded-4 p-3">
+              <i class="bi bi-globe fs-2"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- KPI 3 : Médailles -->
+      <div class="col-12 col-sm-6 col-xl-3">
+        <div class="kpi-card card border-0 shadow-sm rounded-4 p-3 h-100">
+          <div class="d-flex align-items-center justify-content-between">
+            <div>
+              <span class="text-muted fw-semibold text-uppercase fs-7">Médailles Décernées</span>
+              <h2 class="fw-bold fs-1 my-1 text-dark">{{ stats.medaillesAttribuees?.TOTAL || 0 }}</h2>
+              <span class="badge bg-warning-subtle text-warning-emphasis rounded-pill fs-8">
+                <i class="bi bi-award me-1"></i>Récompenses
+              </span>
+            </div>
+            <div class="kpi-icon-wrapper bg-warning text-white rounded-4 p-3">
+              <i class="bi bi-trophy-fill fs-2"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- KPI 4 : Détail Podiums -->
+      <div class="col-12 col-sm-6 col-xl-3">
+        <div class="kpi-card card border-0 shadow-sm rounded-4 p-3 h-100">
+          <span class="text-muted fw-semibold text-uppercase fs-7 mb-2">Répartition Podiums</span>
+          <div class="d-flex justify-content-between align-items-center mt-auto">
+            <div class="text-center px-2 py-1 bg-light rounded-3">
+              <span class="d-block fs-7 text-muted">🥇 Or</span>
+              <strong class="fs-5 text-dark">{{ stats.medaillesAttribuees?.OR || 0 }}</strong>
+            </div>
+            <div class="text-center px-2 py-1 bg-light rounded-3">
+              <span class="d-block fs-7 text-muted">🥈 Ar</span>
+              <strong class="fs-5 text-dark">{{ stats.medaillesAttribuees?.ARGENT || 0 }}</strong>
+            </div>
+            <div class="text-center px-2 py-1 bg-light rounded-3">
+              <span class="d-block fs-7 text-muted">🥉 Br</span>
+              <strong class="fs-5 text-dark">{{ stats.medaillesAttribuees?.BRONZE || 0 }}</strong>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- TABLEAU DU CLASSEMENT GENERAL PAR POINTS -->
+    <div class="card border-0 shadow-sm rounded-4 p-4 bg-white">
+      <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-2">
+        <div>
+          <h4 class="fw-bold text-dark mb-1">
+            <i class="bi bi-bar-chart-line-fill text-primary me-2"></i>Classement Général par Points
+          </h4>
+          <p class="text-muted fs-7 mb-0">
+            Barème officiel : <strong>Or = 7 pts</strong> | <strong>Argent = 4 pts</strong> | <strong>Bronze = 1 pt</strong>
+          </p>
+        </div>
+      </div>
+
+      <div class="table-responsive">
+        <table class="table table-hover align-middle custom-table mb-0">
+          <thead>
+            <tr>
+              <th class="text-center" style="width: 80px;">Rang</th>
+              <th>Nation</th>
+              <th class="text-center">🥇 Or</th>
+              <th class="text-center">🥈 Argent</th>
+              <th class="text-center">🥉 Bronze</th>
+              <th class="text-center">Total Médailles</th>
+              <th class="text-end pe-4">Score Total</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of stats.classementParPoints; let i = index">
+              <!-- Rang -->
+              <td class="text-center">
+                <span class="rank-badge" [ngClass]="{
+                  'rank-1': i === 0,
+                  'rank-2': i === 1,
+                  'rank-3': i === 2,
+                  'rank-default': i >= 3
+                }">
+                  {{ i === 0 ? '👑' : '#' + (i + 1) }}
+                </span>
+              </td>
+
+              <!-- Nom du Pays -->
+              <td class="fw-bold text-dark fs-6">
+                {{ item.pays }}
+              </td>
+
+              <!-- Décompte des Médailles -->
+              <td class="text-center"><span class="badge medal-pill bg-gold-subtle text-dark">{{ item.orCount }}</span></td>
+              <td class="text-center"><span class="badge medal-pill bg-silver-subtle text-dark">{{ item.argentCount }}</span></td>
+              <td class="text-center"><span class="badge medal-pill bg-bronze-subtle text-dark">{{ item.bronzeCount }}</span></td>
+
+              <!-- Total Médailles -->
+              <td class="text-center fw-semibold text-secondary">{{ item.nombreMedailles }}</td>
+
+              <!-- Score Total -->
+              <td class="text-end pe-4">
+                <span class="fw-bold text-primary fs-5">{{ item.points }}</span> <small class="text-muted">pts</small>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+</div>
